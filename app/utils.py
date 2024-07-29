@@ -2,6 +2,7 @@ import tensorflow as tf
 from typing import List
 import cv2
 import os 
+from lip import detect_lips
 
 vocab = [x for x in "abcdefghijklmnopqrstuvwxyz'?!123456789 "]
 char_to_num = tf.keras.layers.StringLookup(vocabulary=vocab, oov_token="")
@@ -17,7 +18,9 @@ def load_video(path:str) -> List[float]:
     for _ in range(int(cap.get(cv2.CAP_PROP_FRAME_COUNT))): 
         ret, frame = cap.read()
         frame = tf.image.rgb_to_grayscale(frame)
+        
         frames.append(frame[190:236,80:220,:])
+        
     cap.release()
     
     mean = tf.math.reduce_mean(frames)
